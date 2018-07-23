@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.icss.rankings.dao.UserMapper">
+
+
+	<resultMap id="BaseResultMap" type="com.icss.rankings.pojo.User">
+		<id column="U_ID" property="uId" jdbcType="DECIMAL" />
+		<result column="U_NAME" property="uName" jdbcType="VARCHAR" />
+		<result column="U_PWD" property="uPwd" jdbcType="VARCHAR" />
+		<result column="U_ROLE" property="uRole" jdbcType="DECIMAL" />
+	</resultMap>
+	<resultMap id="ResultMapWithBLOBs" type="com.icss.rankings.pojo.User"
+		extends="BaseResultMap">
+		<result column="U_HEADER" property="uHeader" jdbcType="CLOB" />
+	</resultMap>
+
+
+	<insert id="insert" parameterType="com.icss.rankings.pojo.User">
+		insert into USERS
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+
+			U_ID,
+
+			<if test="uName != null">
+				U_NAME,
+			</if>
+			<if test="uPwd != null">
+				U_PWD,
+			</if>
+			<if test="uRole != null">
+				U_ROLE,
+			</if>
+			<if test="uHeader != null">
+				U_HEADER,
+			</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+
+			u_seq.nextval,
+
+			<if test="uName != null">
+				#{uName,jdbcType=VARCHAR},
+			</if>
+			<if test="uPwd != null">
+				#{uPwd,jdbcType=VARCHAR},
+			</if>
+			<if test="uRole != null">
+				#{uRole,jdbcType=DECIMAL},
+			</if>
+			<if test="uHeader != null">
+				#{uHeader,jdbcType=CLOB},
+			</if>
+		</trim>
+	</insert>
+
+	<select id="userLogin" parameterType="com.icss.rankings.pojo.User"
+		resultMap="ResultMapWithBLOBs">
+		select * from users where
+		u_Name = #{uName,jdbcType=VARCHAR}
+		and
+		u_Pwd = #{uPwd,jdbcType=VARCHAR}
+	</select>
+
+	<select id="queryAllUser" resultMap="ResultMapWithBLOBs">
+		select * from users where
+		u_role=1
+	</select>
+
+    <delete id="deleteUserById" parameterType="java.lang.Integer">
+       delete from users where u_id=#{uId}
+    </delete>
+    
+    <select id="queryUserById" parameterType="java.lang.Integer" resultMap="ResultMapWithBLOBs">
+        select * from users where u_id=#{uId}
+    </select>
+    
+    <update id="updateUserById" parameterType="com.icss.rankings.pojo.User">
+       update users set u_header=#{uHeader},u_name=#{uName} where u_id=#{uId}
+    </update>
+
+</mapper>

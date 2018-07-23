@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.icss.rankings.dao.InfoMapper">
+	<resultMap id="BaseResultMap" type="com.icss.rankings.pojo.Info">
+		<id column="I_ID" property="iId" jdbcType="DECIMAL" />
+		<result column="I_NAME" property="iName" jdbcType="VARCHAR" />
+		<result column="I_INFO" property="iInfo" jdbcType="VARCHAR" />
+		<result column="I_BIRTHDAY" property="iBirthday" jdbcType="VARCHAR" />
+		<result column="I_LIKE" property="iLike" jdbcType="DECIMAL" />
+	</resultMap>
+	<resultMap id="ResultMapWithBLOBs" type="com.icss.rankings.pojo.Info"
+		extends="BaseResultMap">
+		<result column="I_IMG" property="iImg" jdbcType="CLOB" />
+	</resultMap>
+	<insert id="insert" parameterType="com.icss.rankings.pojo.Info">
+		insert into INFOS (I_ID,
+		I_NAME, I_INFO,
+		I_BIRTHDAY, I_LIKE, I_IMG
+		)
+		values (i_seq.nextval,
+		#{iName,jdbcType=VARCHAR}, #{iInfo,jdbcType=VARCHAR},
+		#{iBirthday,jdbcType=VARCHAR}, 0, #{iImg,jdbcType=CLOB}
+		)
+	</insert>
+
+	<select id="queryAllInfo" resultMap="ResultMapWithBLOBs">
+		select * from INFOS
+	</select>
+	
+	<delete id="deleteInfoById" parameterType="java.lang.Integer">
+	   delete from infos where i_id = #{iId}
+	</delete>
+	
+	<select id="queryInfoById" resultMap="ResultMapWithBLOBs" parameterType="java.lang.Integer">
+		select * from INFOS where i_id = #{iId}
+	</select>
+	<update id="updateLike" parameterType="java.lang.Integer">
+	   update infos set i_like=i_like+1 where i_id=#{#iId}
+	</update>
+
+</mapper>

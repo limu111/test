@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.icss.rankings.dao.PicMapper" >
+  <resultMap id="BaseResultMap" type="com.icss.rankings.pojo.Pic" >
+    <id column="P_ID" property="pId" jdbcType="DECIMAL" />
+    <result column="I_ID" property="iId" jdbcType="DECIMAL" />
+  </resultMap>
+  <resultMap id="ResultMapWithBLOBs" type="com.icss.rankings.pojo.Pic" extends="BaseResultMap" >
+    <result column="P_CONTENT" property="pContent" jdbcType="CLOB" />
+  </resultMap>
+  
+  <insert id="insert" parameterType="com.icss.rankings.pojo.Pic" >
+    insert into PICS
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+        P_ID,
+      <if test="iId != null" >
+        I_ID,
+      </if>
+      <if test="pContent != null" >
+        P_CONTENT,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+       p_seq.nextval,
+      <if test="iId != null" >
+        #{iId,jdbcType=DECIMAL},
+      </if>
+      <if test="pContent != null" >
+        #{pContent,jdbcType=CLOB},
+      </if>
+    </trim>
+  </insert>
+  
+  <select id="queryAllPic" resultMap="ResultMapWithBLOBs" parameterType="java.lang.Integer">
+     select * from pics   where i_id=#{iId}
+  </select>
+  
+</mapper>
